@@ -43,15 +43,13 @@ class PullRequestMergeUpdatePartialAPIView(generics.UpdateAPIView):
     
     def update(self, request, format=None, *args, **kwargs):
         info = request.data
-        print(info)
-        local_repo = Repo("/tmp/git/ilich")
+        local_repo = Repo("/code/backgitpython/repository")
         branch_source = info['branch_source']
         branch_destiny = info['branch_destiny']
         local_repo.git.checkout(branch_destiny)
 
         try:
             obj = local_repo.git.merge(branch_source)
-            #local_repo.git.push("--set-upstream","origin","eliomar")
         except Exception as ex:
             obj = str(ex).replace("\n", " ")
 

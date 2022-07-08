@@ -5,31 +5,29 @@ from git import Repo, Git, Commit
 class BranchAPIView(APIView):
         
     def get(self, request, format=None, *args, **kwargs):
-        print("BranchesAPIView.get")
-        local_repo = Repo("/tmp/git/ilich")
-        for remote in local_repo.remotes:
-            remote.fetch()
-        remote_repo = local_repo.remote()
-        local_branch = local_repo.active_branch.name
-        remote_branches = []
-        for this_branch in remote_repo.refs:
-            remote_branches.append(this_branch.remote_head)
+        local_repo = Repo("/code/backgitpython/repository")
+        branches = local_repo.git.branch('-a').replace(
+            "*", "").replace("->", "").replace("remotes/", "").replace(
+                "origin/", "").replace("HEAD", "").split()
+        branches = set(branches)
         return Response({
-            'branch_active': local_branch,
-            'branches': remote_branches
+            'branches': branches
             })
 
 class CommitBranchAPIView(APIView):
 
     def get(self, request, branch, format=None):
-        print("CommitsBranchAPIView.get")
-        local_repo = Repo("/tmp/git/ilich")
-        local_repo.git.checkout(branch)
-        o = local_repo.remotes.origin
-        o.pull()
-        commits = list(local_repo.iter_commits(
-            local_repo.active_branch.name, max_count=100
-            ))
+        local_repo = Repo("/code/backgitpython/repository")
+        try:
+            commits = list(local_repo.iter_commits(
+                branch, max_count=100
+                ))
+        except Exception as ex:
+            local_repo.git.checkout(branch)
+            commits = list(local_repo.iter_commits(
+                branch, max_count=100
+                ))
+
         commitsInfo = []
         for c in commits:
             commitsInfo.append({
