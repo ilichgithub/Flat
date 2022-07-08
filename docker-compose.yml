@@ -1,0 +1,25 @@
+version: "3.9"
+services:
+  web-ui-gitpython:
+    build: ./web-ui
+    ports:
+      - "3000:3000"
+    volumes:
+      - "./web-ui:/app:rw"
+    tty: true
+    command: npm start
+
+  db-gitpython:
+    image: postgres:13
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+
+  back-gitpython:
+    build: ./backgitpython
+    command: python ./backgitpython/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000" 
+    depends_on:
+      - db-gitpython
