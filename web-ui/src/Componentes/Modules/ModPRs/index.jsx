@@ -160,7 +160,6 @@ export default class ModPRs extends React.Component {
       this.setState({modalLoading:false})
     } catch (error) {
       this.setState({modalLoading:false})
-      alert("Ocurrió un error al solicitar el servicio");
     }
 
   }
@@ -282,7 +281,7 @@ export default class ModPRs extends React.Component {
               </thead>
               <tbody>
                 { this.state.prs.map( pr =>
-                  <tr className="table-success" id={pr.id}>
+                  <tr className="table-success" name={pr.id}>
                     <td className="text-nowrap  align-middle">{pr.branch_source}</td>
                     <td className="text-nowrap  align-middle">{pr.branch_destiny}</td>
                     <td className="text-nowrap  align-middle">{pr.author}</td>

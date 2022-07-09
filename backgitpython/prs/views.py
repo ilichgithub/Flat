@@ -43,7 +43,7 @@ class PullRequestMergeUpdatePartialAPIView(generics.UpdateAPIView):
     
     def update(self, request, format=None, *args, **kwargs):
         info = request.data
-        local_repo = Repo("/code/backgitpython/repository")
+        local_repo = Repo("/repository/clone")
         branch_source = info['branch_source']
         branch_destiny = info['branch_destiny']
         local_repo.git.checkout(branch_destiny)

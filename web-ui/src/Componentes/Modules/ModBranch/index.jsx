@@ -44,7 +44,6 @@ export default class ModBranch extends React.Component {
       this.setState({modalLoading:false})
     } catch (error) {
       this.setState({modalLoading:false})
-      alert("Ocurrió un error al solicitar el servicio");
     }
 
   }
