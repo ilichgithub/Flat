@@ -20,12 +20,12 @@ class CommitBranchAPIView(APIView):
         local_repo = Repo("/code/backgitpython/repository")
         try:
             commits = list(local_repo.iter_commits(
-                branch, max_count=100
+                branch
                 ))
         except Exception as ex:
             local_repo.git.checkout(branch)
             commits = list(local_repo.iter_commits(
-                branch, max_count=100
+                branch
                 ))
 
         commitsInfo = []
