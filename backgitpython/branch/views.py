@@ -13,7 +13,8 @@ def cloneRepository():
 class BranchAPIView(APIView):
         
     def get(self, request, format=None, *args, **kwargs):
-        mkdir = os.path.exists('Desktop/folder/myfolder')
+        mkdir = os.path.exists('/repository/clone')
+        clone = False
         if not mkdir:
             clone = cloneRepository()
         if clone or mkdir:

@@ -11,16 +11,17 @@ class BranchesAPIViewTest(APITestCase):
 		pass
 		
 	def test_get_branches(self):
-		url = reverse("branch")
-		response = self.client.get(url)
-		self.assertEqual(response.status_code, status.HTTP_200_OK)
+		response = self.client.get('/api/v1/branches/')
 		data = response.json()
-		print(data)
+		self.assertEqual(response.status_code, status.HTTP_200_OK)
 		self.assertFalse( "branchActive" in data )
-		
-	def test_get_branches(self):
-		url = reverse("branch")
-		response = self.client.get(url)
-		self.assertEqual(response.status_code, status.HTTP_200_OK)
+		self.assertTrue("branches" in data )
+		self.assertTrue("master" in data["branches"] )
+		self.assertFalse( "HEAD" in data["branches"] )
+
+	def test_get_commits(self):
+		response = self.client.get('/api/v1/branches/master/commits')
 		data = response.json()
 		print(data)
+		self.assertEqual(response.status_code, status.HTTP_200_OK)
+		self.assertTrue(len(data)>0)
