@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import render
 from rest_framework import status, generics 
 from .serializers import PullRequestSerializers
@@ -43,7 +44,7 @@ class PullRequestMergeUpdatePartialAPIView(generics.UpdateAPIView):
     
     def update(self, request, format=None, *args, **kwargs):
         info = request.data
-        local_repo = Repo("/repository/clone")
+        local_repo = Repo(settings.PATH_REPOSITORY_LOCAL)
         branch_source = info['branch_source']
         branch_destiny = info['branch_destiny']
         local_repo.git.checkout(branch_destiny)
@@ -60,7 +61,7 @@ class PullRequestMergeUpdatePartialAPIView(generics.UpdateAPIView):
         if serializer.is_valid():
             serializer.save()
             return Response({
-                "message": "pull rquest updated successfully",
+                "message": "pull request updated successfully",
                 "result":obj
                 })
         else:

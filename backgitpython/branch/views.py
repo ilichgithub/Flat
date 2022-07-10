@@ -1,11 +1,12 @@
 import os
+from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from git import Repo, Git, Commit
 
 def cloneRepository():
     try:
-        Repo.clone_from("https://github.com/FlatDigital/fullstack-interview-test.git", "/repository/clone")
+        Repo.clone_from(settings.URL_REPOSITORY_REMOTE, settings.PATH_REPOSITORY_LOCAL)
         return True
     except Exception as ex:
         return False
@@ -13,12 +14,12 @@ def cloneRepository():
 class BranchAPIView(APIView):
         
     def get(self, request, format=None, *args, **kwargs):
-        mkdir = os.path.exists('/repository/clone')
+        mkdir = os.path.exists(settings.PATH_REPOSITORY_LOCAL)
         clone = False
         if not mkdir:
             clone = cloneRepository()
         if clone or mkdir:
-            local_repo = Repo("/repository/clone")
+            local_repo = Repo(settings.PATH_REPOSITORY_LOCAL)
             print(local_repo.git.status())
             branches = local_repo.git.branch('-a').replace(
                 "*", "").replace("->", "").replace("remotes/", "").replace(
@@ -35,7 +36,7 @@ class BranchAPIView(APIView):
 class CommitBranchAPIView(APIView):
 
     def get(self, request, branch, format=None):
-        local_repo = Repo("/repository/clone")
+        local_repo = Repo(settings.PATH_REPOSITORY_LOCAL)
         try:
             commits = list(local_repo.iter_commits(
                 branch
@@ -59,5 +60,5 @@ class CommitBranchAPIView(APIView):
 
 class CloneRepoAPIView(APIView):
     def get(self, request, format=None, *args, **kwargs):
-        Repo.clone_from("https://github.com/FlatDigital/fullstack-interview-test.git", "/repository/clone")
+        Repo.clone_from(settings.URL_REPOSITORY_REMOTE, settings.PATH_REPOSITORY_LOCAL)
         return Response({"result":"clone"})

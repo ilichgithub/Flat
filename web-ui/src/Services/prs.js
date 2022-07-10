@@ -64,7 +64,6 @@ export const getPullRequests = async ()  => {
     };
     
     var resultado = await fetch(`${proxy.url}/prs/merge/`+id+`/`, opciones);
-    if (!resultado.ok) throw new Error("Error al realizar la petición");
-    return resultado;
+    return resultado.json();
   };
   

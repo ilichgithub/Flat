@@ -129,8 +129,19 @@ export default class ModPRs extends React.Component {
     
     try {
       this.setState({modalLoading:true})
-       await mergeChangeStatusPrs(id,datos);
-       this.setState({modalLoading:false})
+       let answer = await mergeChangeStatusPrs(id,datos);
+       alert(answer.message+"\n"+answer.result);
+       this.setState({
+        modalLoading:false,
+        branchSourceSelect:"-",
+        branchDestinySelect:"-",
+        branchSource: "",
+        branchDestiny: "",
+        author: "",
+        title: "",
+        description: "",
+        status: "OPEN",
+      })
       this.handleGetListPRs();
     } catch (error) {
       this.setState({modalLoading:false})
@@ -144,7 +155,6 @@ export default class ModPRs extends React.Component {
     try {
       this.setState({modalLoading:true})
       let result = await getBranchs();
-      console.log(result)
       let branches =[];
       result.branches.forEach(function(branch) {
         if(branch!=="HEAD"){
@@ -209,7 +219,7 @@ export default class ModPRs extends React.Component {
             </div>
             <div className="col-sm-2">
               <Link className="btn btn-primary btn-block" to="/">
-                volver
+                Volver
               </Link>
             </div>
           </div>
@@ -261,7 +271,7 @@ export default class ModPRs extends React.Component {
             </div>
             <br />
             <br />
-            <button className="btn btn-primary btn-block" onClick={this.handlePostPR} disabled={this.state.buttonStatus}>crear</button>    
+            <button className="btn btn-primary btn-block" onClick={this.handlePostPR} disabled={this.state.buttonStatus}>Crear</button>    
           </div> : <br /> }
           <br /> 
           { this.state.showPrs ? 
@@ -272,8 +282,8 @@ export default class ModPRs extends React.Component {
                   <th scope="col">Origen</th>
                   <th scope="col">Destino</th>
                   <th scope="col">Autor</th>
-                  <th scope="col">titulo</th>
-                  <th scope="col">observacion</th>
+                  <th scope="col">Titulo</th>
+                  <th scope="col">Observación</th>
                   <th scope="col">Estado</th>
                   <th scope="col">Cerrar</th>
                   <th scope="col">Combinar</th>
@@ -289,7 +299,7 @@ export default class ModPRs extends React.Component {
                     <td className="text-nowrap  align-middle">{pr.description}</td>
                     <td className="text-nowrap  align-middle">{pr.status}</td>
                     <td className="text-nowrap  align-middle">{pr.status === "OPEN" ? <button className="btn btn-secondary btn-block" value={pr.id} onClick={e => this.handleRefreshPR(e.target.value,"CLOSED")}  disabled={pr.status!=="OPEN"}>Cerrar</button> : <button className="btn btn-info btn-block"  value={pr.id} onClick={e => this.handleRefreshPR(e.target.value,"OPEN")} disabled={pr.status!=="CLOSED"} >Abrir</button> }</td>
-                    <td className="text-nowrap  align-middle"><button className="btn btn-success btn-block" value={pr.id} disabled={pr.status!=="OPEN"} onClick={e => this.handleMerge(e.target.value,"MERGE",pr.branch_source,pr.branch_destiny)}>Combinar</button></td>
+                    <td className="text-nowrap  align-middle"><button className="btn btn-success btn-block" value={pr.id} disabled={pr.status!=="OPEN"} onClick={e => this.handleMerge(e.target.value,"MERGED",pr.branch_source,pr.branch_destiny)}>Combinar</button></td>
                   </tr>)
                 }
               </tbody>

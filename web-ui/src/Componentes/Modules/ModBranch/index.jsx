@@ -28,7 +28,6 @@ export default class ModBranch extends React.Component {
     try {
       this.setState({modalLoading:true})
       let result = await getBranchs();
-      console.log(result)
       let branches =[];
       result.branches.forEach(function(branch) {
         if(branch!=="HEAD"){
@@ -50,7 +49,6 @@ export default class ModBranch extends React.Component {
 
 
   handleChange = selectedOption => {
-    console.log(selectedOption);
     this.setState({ branchSelect:selectedOption });
     this.handleGetListCommits(selectedOption.value);
   };
@@ -85,7 +83,7 @@ export default class ModBranch extends React.Component {
             </div>
             <div className="col-sm-2">
               <Link className="btn btn-primary btn-block" to="/">
-                volver
+                Volver
               </Link>
             </div>
           </div>
