@@ -36,3 +36,6 @@ To access the REST service of the application you must enter the following addre
 And ready you will have the project fully deployed.
 
 I hope it meets the requirements. Thank you and see you later.
+
+
+Note: Important in the root folder of the project the `repository` folder will be created where the cloned project will be located there.
