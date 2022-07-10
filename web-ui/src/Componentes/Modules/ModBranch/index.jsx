@@ -29,7 +29,7 @@ export default class ModBranch extends React.Component {
       this.setState({modalLoading:true})
       let result = await getBranchs();
       let branches =[];
-      result.branches.forEach(function(branch) {
+      result.result.forEach(function(branch) {
         if(branch!=="HEAD"){
           branches.push({
             label : branch,
@@ -61,7 +61,7 @@ export default class ModBranch extends React.Component {
       this.setState({commits:[],showCommits:false})
       let result = await getCommitsfromBranch(branch);
       this.setState({
-        commits:result,
+        commits:result.result,
         showCommits:true
       });
       this.setState({modalLoading:false})

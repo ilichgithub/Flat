@@ -14,5 +14,6 @@ class PRsAPIViewTest(APITestCase):
 		response = self.client.get('/api/v1/prs/')
 		data = response.json()
 		self.assertEqual(response.status_code, status.HTTP_200_OK)
+		self.assertTrue( len(data) > -1 )
 
 	

@@ -6,6 +6,14 @@ from .models import PullRequest
 from rest_framework.response import Response 
 from git import Repo, Git, Commit
 
+
+
+def getBranches(local_repo):
+    branches = local_repo.git.branch('-a').replace(
+        "*", "").replace("->", "").replace("remotes/", "").replace(
+            "origin/", "").replace("HEAD", "").split()
+    return set(branches)
+
 class PullRequestAPIView(generics.ListCreateAPIView):
     queryset = PullRequest.objects.all()
     serializer_class = PullRequestSerializers
@@ -45,6 +53,22 @@ class PullRequestMergeUpdatePartialAPIView(generics.UpdateAPIView):
     def update(self, request, format=None, *args, **kwargs):
         info = request.data
         local_repo = Repo(settings.PATH_REPOSITORY_LOCAL)
+        branches = getBranches(local_repo)
+        if info['branch_source']==info['branch_destiny']:
+            return Response({
+                "message": "Two Branches are equals",
+                "result":None
+                })
+        if not info['branch_source'] in branches or not info['branch_destiny'] in branches:
+            return Response({
+                "message": "Branch not found",
+                "result":None
+                })
+                
+        instance = self.get_object()
+        serializer = self.get_serializer(
+            instance, data=request.data, partial=True)
+            
         branch_source = info['branch_source']
         branch_destiny = info['branch_destiny']
         local_repo.git.checkout(branch_destiny)
@@ -54,9 +78,6 @@ class PullRequestMergeUpdatePartialAPIView(generics.UpdateAPIView):
         except Exception as ex:
             obj = str(ex).replace("\n", " ")
 
-        instance = self.get_object()
-        serializer = self.get_serializer(
-            instance, data=request.data, partial=True)
 
         if serializer.is_valid():
             serializer.save()

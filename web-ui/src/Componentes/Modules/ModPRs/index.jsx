@@ -87,7 +87,15 @@ export default class ModPRs extends React.Component {
     try {
       this.setState({modalLoading:true})
        await createPullRequest(datos);
-       this.setState({modalLoading:false})
+       this.setState({modalLoading:false,
+        branchSourceSelect:"-",
+        branchDestinySelect:"-",
+        branchSource: "",
+        branchDestiny: "",
+        author: "",
+        title: "",
+        description: "",
+        status: "OPEN",})
       this.handleGetListPRs();
     } catch (error) {
       this.setState({modalLoading:false})
@@ -132,15 +140,7 @@ export default class ModPRs extends React.Component {
        let answer = await mergeChangeStatusPrs(id,datos);
        alert(answer.message+"\n"+answer.result);
        this.setState({
-        modalLoading:false,
-        branchSourceSelect:"-",
-        branchDestinySelect:"-",
-        branchSource: "",
-        branchDestiny: "",
-        author: "",
-        title: "",
-        description: "",
-        status: "OPEN",
+        modalLoading:false
       })
       this.handleGetListPRs();
     } catch (error) {
@@ -156,7 +156,7 @@ export default class ModPRs extends React.Component {
       this.setState({modalLoading:true})
       let result = await getBranchs();
       let branches =[];
-      result.branches.forEach(function(branch) {
+      result.result.forEach(function(branch) {
         if(branch!=="HEAD"){
           branches.push({
             label : branch,
