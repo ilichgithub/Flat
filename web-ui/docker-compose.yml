@@ -1,0 +1,10 @@
+version: "2.3"
+services:
+  web-ejemplo:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - ".:/app:rw"
+    tty: true
+    command: npm start
